@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+myenv/
+.env
+*.venv
+env/
+
+# SQLite database
+db_web.db
+*.sqlite3
+
+# Uploaded files (if you want to ignore uploaded profile pictures)
+static/files/
+
+# Logs
+*.log
+logs/
+debug.log
+
+# Environment variables
+.env
+config.json
+
+# Ignore VS Code settings (optional)
+.vscode/
+
+# Ignore macOS system files (optional)
+.DS_Store

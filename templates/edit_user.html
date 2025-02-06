@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+    <h3 class="mb-4">Edit User</h3>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label>Name:</label>
+            <input type="text" name="uname" class="form-control" value="{{ datas['UNAME'] }}" required>
+        </div>
+        <div class="mb-3">
+            <label>Contact:</label>
+            <input type="text" name="contact" class="form-control" value="{{ datas['CONTACT'] }}" required>
+        </div>
+        <div class="mb-3">
+            <label>Email:</label>
+            <input type="email" name="email" class="form-control" value="{{ datas['EMAIL'] }}" required>
+        </div>
+        <div class="mb-3">
+            <label>Profile Picture:</label>
+            <input type="file" name="profile_pic" class="form-control">
+            {% if datas['PROFILE_PIC'] %}
+                <img src="{{ url_for('static', filename='files/' + datas['PROFILE_PIC']) }}" width="50" height="50" class="mt-2" alt="Profile">
+                <input type="hidden" name="existing_profile_pic" value="{{ datas['PROFILE_PIC'] }}">
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-success">Update User</button>
+    </form>
+</div>
+{% endblock %}

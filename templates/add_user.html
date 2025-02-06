@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+    <h3 class="mb-4">Add User</h3>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label>Name:</label>
+            <input type="text" name="uname" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Contact:</label>
+            <input type="text" name="contact" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Email:</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Password:</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Profile Picture:</label>
+            <input type="file" name="profile_pic" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-success">Add User</button>
+    </form>
+</div>
+{% endblock %}

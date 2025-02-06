@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+    <h3 class="mb-4">User List</h3>
+    <a href="{{ url_for('add_user') }}" class="btn btn-primary mb-3">Add User</a>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Profile Picture</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in datas %}
+            <tr>
+                <td>{{ data['UID'] }}</td>
+                <td>{{ data['UNAME'] }}</td>
+                <td>{{ data['CONTACT'] }}</td>
+                <td>{{ data['EMAIL'] }}</td>
+                <td>
+                    {% if data['PROFILE_PIC'] %}
+                        <img src="{{ url_for('static', filename='files/' + data['PROFILE_PIC']) }}" width="50" height="50" alt="Profile">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('verify_user', uid=data['UID']) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{{ url_for('delete_user', uid=data['UID']) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

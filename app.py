@@ -35,54 +35,6 @@ def allowed_file(filename):
 def is_valid_email(email):
     return re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email)
 
-# @app.route("/")
-# def index():
-#     con = sql.connect("db_web.db")
-#     con.row_factory = sql.Row
-#     cur = con.cursor()
-#     cur.execute("SELECT * FROM users")
-#     data = cur.fetchall()
-#     con.close()
-#     return render_template("index.html", datas=data)
-
-# @app.route("/add_user", methods=['POST', 'GET'])
-# def add_user():
-#     if request.method == 'POST':
-#         uname = request.form['uname']
-#         contact = request.form['contact']
-#         email = request.form['email']
-#         password = request.form['password']
-#         profile_pic = request.files['profile_pic']
-#         profile_pic_filename = None
-
-#         if not is_valid_email(email):
-#             flash('Invalid email format', 'danger')
-#             return redirect(url_for("add_user"))
-
-#         hashed_password = generate_password_hash(password)
-
-#         if profile_pic and allowed_file(profile_pic.filename):
-#             filename, file_extension = os.path.splitext(profile_pic.filename)
-#             profile_pic_filename = secure_filename(filename + str(random.randint(10000, 99999)) + file_extension)
-#             profile_pic.save(os.path.join(app.config['UPLOAD_FOLDER'], profile_pic_filename))
-
-#         con = sql.connect("db_web.db")
-#         cur = con.cursor()
-#         try:
-#             cur.execute("INSERT INTO users (UNAME, CONTACT, EMAIL, PASSWORD, PROFILE_PIC) VALUES (?, ?, ?, ?, ?)", 
-#                         (uname, contact, email, hashed_password, profile_pic_filename))
-#             con.commit()
-#             flash('User Added Successfully', 'success')
-#         except sql.IntegrityError:
-#             flash('Email already exists!', 'danger')
-#         finally:
-#             con.close()
-
-#         return redirect(url_for("index"))
-
-#     return render_template("add_user.html")
-
-
 # Send Email Notification
 def send_email_notification(to_email, username):
     subject = "Welcome to Our Platform!"

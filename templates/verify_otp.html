@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+    <h3>Enter OTP</h3>
+    <form method="POST">
+        <div class="mb-3">
+            <label>OTP</label>
+            <input type="text" name="otp" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success">Verify OTP</button>
+    </form>
+</div>
+{% endblock %}

@@ -8,9 +8,17 @@ import re
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
+from twilio.rest import Client
+
 
 
 app = Flask(__name__)
+
+# Twilio Configuration
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_PHONE_NUMBER = "+14065055202"
+client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 # File Upload Configuration
 UPLOAD_FOLDER = "static/files"
@@ -34,6 +42,93 @@ def allowed_file(filename):
 # Validate email format
 def is_valid_email(email):
     return re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email)
+
+# Generate OTP
+def generate_otp():
+    return str(random.randint(100000, 999999))
+
+# Send OTP via Twilio
+def send_otp(phone_number, otp):
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    message = client.messages.create(
+        body=f"Your OTP code is {otp}",
+        from_=TWILIO_PHONE_NUMBER,
+        to=phone_number
+    )
+    return message.sid
+
+
+# Send OTP via Twilio
+def send_otp(phone_number, otp):
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    message = client.messages.create(
+        body=f"Your OTP code is {otp}",
+        from_=TWILIO_PHONE_NUMBER,
+        to=phone_number
+    )
+    return message.sid
+
+# Login Route
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        con = sql.connect("db_web.db")
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM users WHERE EMAIL=?", (email,))
+        user = cur.fetchone()
+        con.close()
+
+        if user and check_password_hash(user["PASSWORD"], password):
+            otp = generate_otp()
+            session['otp'] = otp
+            session['email'] = email
+
+            send_otp(user["CONTACT"], otp)
+            flash("OTP sent to your registered mobile number.", "info")
+            return redirect(url_for("verify_otp"))
+        else:
+            flash("Invalid email or password", "danger")
+
+    return render_template("login.html")
+
+# Verify OTP Route
+@app.route("/verify_otp", methods=['GET', 'POST'])
+def verify_otp():
+    if 'otp' not in session:
+        flash("Session expired. Please login again.", "danger")
+        return redirect(url_for("login"))
+
+    if request.method == 'POST':
+        entered_otp = request.form['otp']
+        if entered_otp == session['otp']:
+            session.pop('otp', None)
+            session['logged_in'] = True
+            flash("Login successful!", "success")
+            return redirect(url_for("dashboard"))
+        else:
+            flash("Invalid OTP. Try again.", "danger")
+
+    return render_template("verify_otp.html")
+
+# Dashboard Route
+@app.route("/dashboard")
+def dashboard():
+    if 'logged_in' not in session:
+        flash("Please login first.", "warning")
+        return redirect(url_for("login"))
+
+    return render_template("dashboard.html")
+
+# Logout Route
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Logged out successfully", "info")
+    return redirect(url_for("login"))
 
 # Send Email Notification
 def send_email_notification(to_email, username):
